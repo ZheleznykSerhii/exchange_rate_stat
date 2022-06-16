@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { API } from '../API/api';
+import {rateForTodayAPI} from '../API/api'
 import style from './TableRate.module.css'
 
 
@@ -7,31 +7,43 @@ import style from './TableRate.module.css'
 
 const TableRate = () => {
 
-//   const [rateForToday, setDateForToday] = useState([])
+  const date = new Date()
+  const todayDate = date.getDate()
+  const todayMonth = date.getMonth() + 1 < 9? `0${date.getMonth() + 1}` : date.getMonth() + 1
+  const todayYear = date.getFullYear()
 
-//   useEffect(() => {
-  
-//   const todayData =  API()
-//    setDateForToday(todayData)
-//    console.log(rateForToday)
-  
-// }, []);
+  const [rateForToday, setDateForToday] = useState()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await rateForTodayAPI()
+      setDateForToday(data)
+     
+    }
+    
+    fetchData()
+  }, [])
+
    return    (
     <table className={style.table}>
       <thead>
         <tr>
           <th>Type</th>
-          <th>Amount</th>
+          
           <th>Currency</th>
+          <th>Amount on {todayDate}:{todayMonth }:{todayYear}</th>
         </tr>
       </thead>
       <tbody>
-       
-          <tr >
-            <td>data.type</td>
-            <td>data.amount</td>
-            <td>data.currency</td>
+      {rateForToday && rateForToday.map((item) => (
+          <tr key={item.r030}>
+           
+            <td>{item.txt}</td>
+            
+            <td>{item.cc}</td>
+            <td>{item.rate}</td>
           </tr>
+        ))}
        
       </tbody>
     </table>
